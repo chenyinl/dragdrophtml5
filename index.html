@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>HTML5 File Drag Drop</title>
+<style>
+.fileNotOn {
+    width:220px;
+    height:220px;
+    border:5px solid gray;
+}
+.fileOn {
+    width:220px;
+    height:220px;
+    border:5px solid red;
+}
+</style>
+</head>
+<body>
+	<div 
+	    id="filedrag" 
+	    class = "fileNotOn" 
+	    ondragover="FileDragHover(event); return false;"
+	    ondragleave = "FileDragLeave(event); return false;"
+	    ondrop="FileDrop(event);return false;"
+	>
+	    <div id="imageField">drop files here</div>
+    </div>
+<script>
+    filedrag = document.getElementById("filedrag");
+    imageField = document.getElementById("imageField");
+
+    function FileDragHover(e){
+        e.stopPropagation();
+        e.preventDefault();
+        filedrag.className = "fileOn";
+    }
+
+    function FileDragLeave(e){
+        e.stopPropagation();
+        e.preventDefault();
+        filedrag.className = "fileNotOn";
+    }
+
+    function FileDrop(e){
+    	var files = e.dataTransfer.files; /*e.target.files|| if not chrome*/
+
+    	if(files.length>1){
+    		console.log("only one file allowed");
+    	}else{
+    		console.log("Got one file");
+    	}
+        file=files[0];
+        if(file.type.indexOf("image") ==0){
+
+    		FileShow(file);
+    	}else{
+    		console.log("non-image was uploaded");
+    	}
+    }
+
+    function FileShow(file){
+        var reader = new FileReader();
+        reader.onload=function(e){
+        	imageField.innerHTML = "<div id='imageField'><img src='"+e.target.result+"'/></div>";
+        }
+        reader.readAsDataURL(file);
+    }
+</script>
+</body>
+</html>
